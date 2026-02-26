@@ -1,0 +1,8 @@
+C:\Users\Admin\Documents\project_gr6\cs464_project\cs464_project\obj\Debug\cs464_project.csproj.AssemblyReference.cache
+C:\Users\Admin\Documents\project_gr6\cs464_project\cs464_project\obj\Debug\MainWindow.g.cs
+C:\Users\Admin\Documents\project_gr6\cs464_project\cs464_project\obj\Debug\View\HomePage.g.cs
+C:\Users\Admin\Documents\project_gr6\cs464_project\cs464_project\obj\Debug\View\Login.g.cs
+C:\Users\Admin\Documents\project_gr6\cs464_project\cs464_project\obj\Debug\App.g.cs
+C:\Users\Admin\Documents\project_gr6\cs464_project\cs464_project\obj\Debug\cs464_project_Content.g.cs
+C:\Users\Admin\Documents\project_gr6\cs464_project\cs464_project\obj\Debug\cs464_project_MarkupCompile.cache
+C:\Users\Admin\Documents\project_gr6\cs464_project\cs464_project\obj\Debug\cs464_project_MarkupCompile.lref
