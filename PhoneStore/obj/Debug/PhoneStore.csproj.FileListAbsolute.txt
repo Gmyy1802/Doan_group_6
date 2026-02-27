@@ -1,0 +1,15 @@
+D:\CS 464 RIS1\PhoneStore\PhoneStore\bin\Debug\PhoneStore.exe.config
+D:\CS 464 RIS1\PhoneStore\PhoneStore\bin\Debug\PhoneStore.exe
+D:\CS 464 RIS1\PhoneStore\PhoneStore\bin\Debug\PhoneStore.pdb
+D:\CS 464 RIS1\PhoneStore\PhoneStore\obj\Debug\PhoneStore.csprojAssemblyReference.cache
+D:\CS 464 RIS1\PhoneStore\PhoneStore\obj\Debug\MainWindow.g.cs
+D:\CS 464 RIS1\PhoneStore\PhoneStore\obj\Debug\App.g.cs
+D:\CS 464 RIS1\PhoneStore\PhoneStore\obj\Debug\PhoneStore_MarkupCompile.cache
+D:\CS 464 RIS1\PhoneStore\PhoneStore\obj\Debug\PhoneStore_MarkupCompile.lref
+D:\CS 464 RIS1\PhoneStore\PhoneStore\obj\Debug\MainWindow.baml
+D:\CS 464 RIS1\PhoneStore\PhoneStore\obj\Debug\PhoneStore.g.resources
+D:\CS 464 RIS1\PhoneStore\PhoneStore\obj\Debug\PhoneStore.Properties.Resources.resources
+D:\CS 464 RIS1\PhoneStore\PhoneStore\obj\Debug\PhoneStore.csproj.GenerateResource.cache
+D:\CS 464 RIS1\PhoneStore\PhoneStore\obj\Debug\PhoneStore.csproj.CoreCompileInputs.cache
+D:\CS 464 RIS1\PhoneStore\PhoneStore\obj\Debug\PhoneStore.exe
+D:\CS 464 RIS1\PhoneStore\PhoneStore\obj\Debug\PhoneStore.pdb
