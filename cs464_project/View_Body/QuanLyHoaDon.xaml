@@ -1,12 +1,100 @@
-﻿<Window x:Class="cs464_project.View_Body.QuanLyHoaDon"
+<UserControl x:Class="cs464_project.View_Body.QuanLyHoaDon"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:cs464_project.View_Body"
         mc:Ignorable="d"
-        Title="QuanLyHoaDon" Height="450" Width="800">
-    <Grid>
-        
+        Loaded="Window_Loaded">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Top: Filter area -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
+            <TextBlock Text="Từ ngày:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+            <DatePicker x:Name="dpTuNgay" Width="130" Margin="0,0,10,0"/>
+            <TextBlock Text="Đến ngày:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+            <DatePicker x:Name="dpDenNgay" Width="130" Margin="0,0,10,0"/>
+            <TextBox x:Name="txtTimKiem" Width="200" Margin="0,0,10,0" VerticalContentAlignment="Center"
+                     ToolTip="Tìm theo mã HĐ, tên khách hàng"/>
+            <Button x:Name="btnTimKiem" Content="Tìm" Width="70" Click="BtnTimKiem_Click"/>
+        </StackPanel>
+
+        <!-- Bottom: Left DataGrid + Right Form -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1.2*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Left: Orders DataGrid -->
+            <DataGrid x:Name="dgOrders" Grid.Column="0" Margin="0,0,10,0"
+                      AutoGenerateColumns="False" IsReadOnly="True"
+                      SelectionMode="Single" SelectionChanged="DgOrders_SelectionChanged">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Mã HĐ" Binding="{Binding OrderCode}" Width="80"/>
+                    <DataGridTextColumn Header="Ngày" Binding="{Binding OrderDate, StringFormat=dd/MM/yyyy}" Width="100"/>
+                    <DataGridTextColumn Header="Khách hàng" Binding="{Binding CustomerName}" Width="130"/>
+                    <DataGridTextColumn Header="Tổng tiền" Binding="{Binding TotalAmount, StringFormat=N0}" Width="100"/>
+                    <DataGridTextColumn Header="Trạng thái" Binding="{Binding Status}" Width="90"/>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <!-- Right: Create order form -->
+            <Border Grid.Column="1" BorderBrush="Gray" BorderThickness="1" Padding="10" CornerRadius="5">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <TextBlock Text="Tạo Hóa Đơn Mới" FontWeight="Bold" FontSize="15" Margin="0,0,0,10"/>
+
+                        <TextBlock Text="Khách hàng:" Margin="0,0,0,3"/>
+                        <ComboBox x:Name="cboKhachHang" DisplayMemberPath="FullName"
+                                  SelectedValuePath="CustomerId" Margin="0,0,0,8"/>
+
+                        <TextBlock Text="Nhân viên:" Margin="0,0,0,3"/>
+                        <ComboBox x:Name="cboNhanVien" DisplayMemberPath="FullName"
+                                  SelectedValuePath="EmployeeId" Margin="0,0,0,8"/>
+
+                        <TextBlock Text="Thêm sản phẩm:" FontWeight="SemiBold" Margin="0,5,0,5"/>
+                        <ComboBox x:Name="cboSanPham" DisplayMemberPath="ProductName"
+                                  SelectedValuePath="ProductId" Margin="0,0,0,5"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                            <TextBlock Text="Số lượng:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                            <TextBox x:Name="txtSoLuong" Width="60" Margin="0,0,10,0" Text="1"
+                                     VerticalContentAlignment="Center"/>
+                            <Button x:Name="btnThemSP" Content="Thêm SP" Width="80" Click="BtnThemSP_Click"/>
+                        </StackPanel>
+
+                        <DataGrid x:Name="dgOrderItems" Height="150" Margin="0,5,0,5"
+                                  AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Sản phẩm" Binding="{Binding ProductName}" Width="120"/>
+                                <DataGridTextColumn Header="SL" Binding="{Binding Quantity}" Width="45"/>
+                                <DataGridTextColumn Header="Đơn giá" Binding="{Binding UnitPrice, StringFormat=N0}" Width="80"/>
+                                <DataGridTextColumn Header="Thành tiền" Binding="{Binding LineTotal, StringFormat=N0}" Width="90"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                        <TextBlock Margin="0,0,0,5">
+                            <Run Text="Tổng cộng: " FontWeight="SemiBold"/>
+                            <Run x:Name="runTongCong" Text="0" FontWeight="Bold" Foreground="Red"/>
+                        </TextBlock>
+
+                        <TextBlock Text="Ghi chú:" Margin="0,0,0,3"/>
+                        <TextBox x:Name="txtGhiChu" Height="40" TextWrapping="Wrap"
+                                 AcceptsReturn="True" Margin="0,0,0,10"/>
+
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Button x:Name="btnTaoHoaDon" Content="Tạo hóa đơn" Width="110"
+                                    Margin="0,0,10,0" Click="BtnTaoHoaDon_Click"/>
+                            <Button x:Name="btnHuyHoaDon" Content="Hủy hóa đơn" Width="110"
+                                    Click="BtnHuyHoaDon_Click"/>
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
     </Grid>
-</Window>
+</UserControl>

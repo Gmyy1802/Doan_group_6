@@ -88,22 +88,24 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="40"/>
                                     <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="44"/>
                                 </Grid.ColumnDefinitions>
 
                                 <TextBlock Text="👤"
                                            VerticalAlignment="Center"
                                            HorizontalAlignment="Center"
                                            FontSize="14"
-                                           Foreground="#64748B"/>
+                                           Foreground="#64748B" Margin="10,0"/>
 
                                 <TextBox x:Name="txt_DN"
                                          Grid.Column="1"
-                                         Height="42"
+                                         Height="42
+                                         "
                                          Padding="10,0,10,0"
                                          BorderThickness="0"
                                          Background="Transparent"
                                          FontSize="14"
-                                         VerticalContentAlignment="Center"/>
+                                         VerticalContentAlignment="Center" Grid.ColumnSpan="2"/>
                             </Grid>
                         </Border>
                     </StackPanel>
@@ -130,12 +132,11 @@
 
                                 <PasswordBox x:Name="pw_mk"
                                              Grid.Column="1"
-                                             Height="42"
+                                           Height="19"
                                              Padding="10,0,10,0"
                                              BorderThickness="0"
                                              Background="Transparent"
-                                             FontSize="14"
-                                             PasswordChanged="pw_mk_PasswordChanged"/>
+                                             FontSize="14"    PasswordChanged="pw_mk_PasswordChanged"/>
 
                                 <TextBox x:Name="txtPasswordVisible"
                                          Grid.Column="1"
@@ -222,7 +223,7 @@
                         </Button>
                     </StackPanel>
 
-             
+
                     <TextBlock Grid.Row="5"
                                Text="© Group 6-2026 "
                                Foreground="#94A3B8"

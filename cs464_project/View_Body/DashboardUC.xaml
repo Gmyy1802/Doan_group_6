@@ -1,0 +1,205 @@
+<UserControl x:Class="cs464_project.View_Body.DashboardUC"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Loaded="UserControl_Loaded">
+
+    <UserControl.Resources>
+        <Style x:Key="DashCard" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="14"/>
+            <Setter Property="Padding" Value="20"/>
+            <Setter Property="Margin" Value="0,0,16,0"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="16" ShadowDepth="2" Opacity="0.08" Color="#000"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="28,24,28,20">
+        <StackPanel>
+
+            <!-- Header -->
+            <StackPanel Margin="0,0,0,24">
+                <TextBlock Text="Tổng Quát" FontSize="26" FontWeight="Bold" Foreground="#1E293B"/>
+                <TextBlock Foreground="#64748B" FontSize="13" Margin="0,4,0,0">
+                    <Run Text="Xin chào, chúc bạn ngày làm việc hiệu quả! • Hôm nay: "/>
+                    <Run x:Name="txtHomNay" Text="--/--/----"/>
+                </TextBlock>
+            </StackPanel>
+
+            <!-- ══ STATS CARDS ══ -->
+            <UniformGrid Columns="4" Margin="0,0,0,24">
+                <!-- Card 1: Doanh thu -->
+                <Border Style="{StaticResource DashCard}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Width="48" Height="48" CornerRadius="12" Background="#EBF5FF" Margin="0,0,14,0">
+                            <TextBlock Text="💰" FontSize="22" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Text="DOANH THU HÔM NAY" FontSize="10" Foreground="#64748B" FontWeight="SemiBold"/>
+                            <TextBlock x:Name="txtDoanhThuHomNay" Text="0 đ" FontSize="20" FontWeight="Bold" Foreground="#0F62FE" Margin="0,4,0,0"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Card 2: Hóa đơn -->
+                <Border Style="{StaticResource DashCard}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Width="48" Height="48" CornerRadius="12" Background="#F0FDF4" Margin="0,0,14,0">
+                            <TextBlock Text="🧾" FontSize="22" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Text="HÓA ĐƠN HÔM NAY" FontSize="10" Foreground="#64748B" FontWeight="SemiBold"/>
+                            <TextBlock x:Name="txtSoHoaDonHomNay" Text="0" FontSize="20" FontWeight="Bold" Foreground="#16A34A" Margin="0,4,0,0"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Card 3: Sản phẩm -->
+                <Border Style="{StaticResource DashCard}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Width="48" Height="48" CornerRadius="12" Background="#FFF7ED" Margin="0,0,14,0">
+                            <TextBlock Text="📦" FontSize="22" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Text="TỔNG SẢN PHẨM" FontSize="10" Foreground="#64748B" FontWeight="SemiBold"/>
+                            <TextBlock x:Name="txtTongSanPham" Text="0" FontSize="20" FontWeight="Bold" Foreground="#EA580C" Margin="0,4,0,0"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Card 4: Nhân viên -->
+                <Border Style="{StaticResource DashCard}" Margin="0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Width="48" Height="48" CornerRadius="12" Background="#F5F3FF" Margin="0,0,14,0">
+                            <TextBlock Text="👥" FontSize="22" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Text="TỔNG NHÂN VIÊN" FontSize="10" Foreground="#64748B" FontWeight="SemiBold"/>
+                            <TextBlock x:Name="txtTongNhanVien" Text="0" FontSize="20" FontWeight="Bold" Foreground="#7C3AED" Margin="0,4,0,0"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </UniformGrid>
+
+            <!-- ══ BOTTOM SECTION ══ -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Recent orders table -->
+                <Border Grid.Column="0" Background="White" CornerRadius="14" Padding="20" Margin="0,0,16,0">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="16" ShadowDepth="2" Opacity="0.08" Color="#000"/>
+                    </Border.Effect>
+                    <DockPanel>
+                        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,14">
+                            <TextBlock Text="🧾" FontSize="16" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <TextBlock Text="Hóa Đơn Gần Đây" FontWeight="Bold" FontSize="15" Foreground="#1E293B" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <DataGrid x:Name="dgHoaDonGanDay"
+                                  AutoGenerateColumns="False"
+                                  CanUserAddRows="False"
+                                  IsReadOnly="True"
+                                  HeadersVisibility="Column"
+                                  RowHeight="32"
+                                  GridLinesVisibility="Horizontal"
+                                  HorizontalGridLinesBrush="#F1F5F9"
+                                  BorderThickness="0"
+                                  Background="Transparent"
+                                  RowBackground="White"
+                                  AlternatingRowBackground="#F8FAFC">
+                            <DataGrid.ColumnHeaderStyle>
+                                <Style TargetType="DataGridColumnHeader">
+                                    <Setter Property="Background" Value="#F1F5F9"/>
+                                    <Setter Property="Foreground" Value="#475569"/>
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                    <Setter Property="FontSize" Value="12"/>
+                                    <Setter Property="Padding" Value="10,8"/>
+                                    <Setter Property="BorderThickness" Value="0"/>
+                                </Style>
+                            </DataGrid.ColumnHeaderStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Mã HĐ" Binding="{Binding InvoiceCode}" Width="80"/>
+                                <DataGridTextColumn Header="Ngày" Binding="{Binding InvoiceDate}" Width="90"/>
+                                <DataGridTextColumn Header="Khách hàng" Binding="{Binding CustomerName}" Width="*"/>
+                                <DataGridTextColumn Header="Tổng tiền" Binding="{Binding TotalAmount}" Width="100"/>
+                                <DataGridTextColumn Header="NV" Binding="{Binding EmployeeName}" Width="80"/>
+                                <DataGridTextColumn Header="Trạng thái" Binding="{Binding Status}" Width="85"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </DockPanel>
+                </Border>
+
+                <!-- Right panels -->
+                <StackPanel Grid.Column="1">
+                    <!-- Top selling -->
+                    <Border Background="White" CornerRadius="14" Padding="18" Margin="0,0,0,16">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="16" ShadowDepth="2" Opacity="0.08" Color="#000"/>
+                        </Border.Effect>
+                        <DockPanel>
+                            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,10">
+                                <TextBlock Text="🔥" FontSize="15" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <TextBlock Text="Top Bán Chạy" FontWeight="Bold" FontSize="14" Foreground="#1E293B" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <ListView x:Name="lvTopBanChay" Height="160" BorderThickness="0" Background="Transparent">
+                                <ListView.View>
+                                    <GridView>
+                                        <GridViewColumn Header="Sản phẩm" DisplayMemberBinding="{Binding ProductName}" Width="160"/>
+                                        <GridViewColumn Header="SL" DisplayMemberBinding="{Binding Quantity}" Width="50"/>
+                                    </GridView>
+                                </ListView.View>
+                            </ListView>
+                        </DockPanel>
+                    </Border>
+
+                    <!-- Low stock -->
+                    <Border Background="White" CornerRadius="14" Padding="18">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="16" ShadowDepth="2" Opacity="0.08" Color="#000"/>
+                        </Border.Effect>
+                        <DockPanel>
+                            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,10">
+                                <TextBlock Text="⚠️" FontSize="15" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <TextBlock Text="Sắp Hết Hàng" FontWeight="Bold" FontSize="14" Foreground="#DC2626" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <ListView x:Name="lvSapHetHang" Height="160" BorderThickness="0" Background="Transparent">
+                                <ListView.View>
+                                    <GridView>
+                                        <GridViewColumn Header="Sản phẩm" DisplayMemberBinding="{Binding ProductName}" Width="160"/>
+                                        <GridViewColumn Header="Tồn" DisplayMemberBinding="{Binding Quantity}" Width="50"/>
+                                    </GridView>
+                                </ListView.View>
+                            </ListView>
+                        </DockPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

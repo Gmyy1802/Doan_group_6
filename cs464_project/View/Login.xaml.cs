@@ -1,33 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using cs464_project.DataAccess;
+using System;
+using System.Data.SqlClient;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace cs464_project.View
 {
-    /// <summary>
-    /// Interaction logic for Login.xaml
-    /// </summary>
     public partial class Login : Window
     {
         private bool _isPasswordVisible = false;
-        private bool _syncingText = false; 
+        private bool _syncingText = false;
 
         public Login()
         {
             InitializeComponent();
         }
 
-        
         private void btnTogglePassword_Click(object sender, RoutedEventArgs e)
         {
             _isPasswordVisible = !_isPasswordVisible;
@@ -37,7 +25,7 @@ namespace cs464_project.View
                 txtPasswordVisible.Text = pw_mk.Password;
                 txtPasswordVisible.Visibility = Visibility.Visible;
                 pw_mk.Visibility = Visibility.Collapsed;
-                txtEyeIcon.Text = "👁"; 
+                txtEyeIcon.Text = "👁";
                 txtPasswordVisible.Focus();
                 txtPasswordVisible.CaretIndex = txtPasswordVisible.Text.Length;
             }
@@ -54,7 +42,6 @@ namespace cs464_project.View
         private void pw_mk_PasswordChanged(object sender, RoutedEventArgs e)
         {
             if (_syncingText) return;
-
             if (_isPasswordVisible)
             {
                 _syncingText = true;
@@ -63,11 +50,9 @@ namespace cs464_project.View
             }
         }
 
-        private void txtPasswordVisible_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        private void txtPasswordVisible_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (_syncingText) return;
-
-            // Khi đang ở chế độ hiện mật khẩu -> đồng bộ sang PasswordBox
             if (_isPasswordVisible)
             {
                 _syncingText = true;
@@ -76,11 +61,10 @@ namespace cs464_project.View
             }
         }
 
-        // ====== Đăng nhập / Thoát ======
         private void BtnLogin_Click(object sender, RoutedEventArgs e)
         {
             string username = txt_DN.Text.Trim();
-            string password = pw_mk.Password; // luôn lấy từ PasswordBox (đã đồng bộ)
+            string password = pw_mk.Password;
 
             if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
             {
@@ -89,18 +73,56 @@ namespace cs464_project.View
                 return;
             }
 
-            // Demo tạm: admin / 123
-            // Sau này bạn nối DB thì đổi phần này thành query ADO.NET
-            if (username == "admin" && password == "123")
+            try
             {
-                HomePage home = new HomePage();
-                home.Show();
-                this.Close();
+                using (var conn = DbHelper.GetConnection())
+                {
+                    conn.Open();
+                    string sql = "SELECT UserId, PasswordHash, Salt, FullName, RoleId, IsActive FROM Users WHERE Username = @username";
+                    using (var cmd = new SqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@username", username);
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                bool isActive = reader.GetBoolean(reader.GetOrdinal("IsActive"));
+                                if (!isActive)
+                                {
+                                    MessageBox.Show("Tài khoản đã bị vô hiệu hóa!",
+                                                    "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                                    return;
+                                }
+
+                                byte[] storedHash = (byte[])reader["PasswordHash"];
+                                byte[] salt = (byte[])reader["Salt"];
+
+                                if (DbHelper.VerifyPassword(password, storedHash, salt))
+                                {
+                                    string fullName = reader["FullName"]?.ToString() ?? username;
+                                    HomePage home = new HomePage(fullName);
+                                    home.Show();
+                                    this.Close();
+                                }
+                                else
+                                {
+                                    MessageBox.Show("Sai mật khẩu!",
+                                                    "Đăng nhập thất bại", MessageBoxButton.OK, MessageBoxImage.Error);
+                                }
+                            }
+                            else
+                            {
+                                MessageBox.Show("Tài khoản không tồn tại!",
+                                                "Đăng nhập thất bại", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
+                        }
+                    }
+                }
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("Sai tài khoản hoặc mật khẩu!",
-                                "Đăng nhập thất bại", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Lỗi kết nối CSDL: " + ex.Message,
+                                "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
