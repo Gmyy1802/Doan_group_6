@@ -1,27 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace cs464_project.View_Body
 {
-    /// <summary>
-    /// Interaction logic for QuanLyHoaDon.xaml
-    /// </summary>
-    public partial class QuanLyHoaDon : Window
+    public partial class QuanLyHoaDon : UserControl
     {
         public QuanLyHoaDon()
         {
             InitializeComponent();
+        }
+
+        private void Window_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+        }
+
+        private void BtnTimKiem_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+        }
+
+        private void DgOrders_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+        }
+
+        private void BtnThemSP_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+        }
+
+        private void BtnTaoHoaDon_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+        }
+
+        private void BtnHuyHoaDon_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
         }
     }
 }

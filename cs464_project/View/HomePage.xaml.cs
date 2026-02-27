@@ -1,72 +1,58 @@
-﻿using cs464_project.View_Body;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using cs464_project.View_Body;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace cs464_project.View
 {
-    /// <summary>
-    /// Interaction logic for HomePage.xaml
-    /// </summary>
     public partial class HomePage : Window
     {
-        public HomePage()
+        public HomePage(string fullName = "Admin")
         {
             InitializeComponent();
-            if (txtHomNay != null)
-                txtHomNay.Text = DateTime.Now.ToString("dd/MM/yyyy");
-            txtDoanhThuHomNay.Text = "0 đ";
-            txtSoHoaDonHomNay.Text = "0";
-            txtTongSanPham.Text = "0";
-            txtTongNhanVien.Text = "0";
+            txtSidebarDate.Text = System.DateTime.Now.ToString("dd/MM/yyyy");
+            txtSidebarUser.Text = fullName;
+            mainFrame.Navigate(new DashboardUC());
         }
 
         private void Menu_TongQuat_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Bạn đang ở trang Tổng Quát.");
+            mainFrame.Navigate(new DashboardUC());
         }
 
         private void Menu_BanHang_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Chưa có trang Bán Hàng.");
+            mainFrame.Navigate(new QuanLyHoaDon());
         }
 
         private void Menu_SanPham_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Chưa có trang Sản Phẩm.");
+            mainFrame.Navigate(new QuanLySanPham());
         }
 
         private void Menu_KhachHang_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Chưa có trang Khách Hàng.");
+            mainFrame.Navigate(new QuanLyKhachHang());
         }
 
         private void Menu_NhanVien_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Chưa có trang Nhân Viên.");
+            mainFrame.Navigate(new QuanLyNhanVien());
         }
 
         private void Menu_ThongKe_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Chưa có trang Thống Kê.");
+            mainFrame.Navigate(new ThongKeDoanhThu());
         }
 
         private void Menu_DangXuat_Click(object sender, RoutedEventArgs e)
         {
-           
-
-            MessageBox.Show("Đăng xuất (demo).");
-        
-    }
+            var result = System.Windows.MessageBox.Show("Bạn có chắc muốn đăng xuất?", "Xác nhận",
+                                         System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Question);
+            if (result == System.Windows.MessageBoxResult.Yes)
+            {
+                Login login = new Login();
+                login.Show();
+                this.Close();
+            }
+        }
     }
 }
