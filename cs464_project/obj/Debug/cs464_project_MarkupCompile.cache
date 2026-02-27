@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-C:\Users\Admin\Documents\project_gr6\cs464_project\cs464_project\obj\Debug\
+C:\Users\minhh\Source\Repos\Doan_group_6\cs464_project\obj\Debug\
 cs464_project
 none
 false
 DEBUG;TRACE
-C:\Users\Admin\Documents\project_gr6\cs464_project\cs464_project\App.xaml
-3-898860682
+C:\Users\minhh\Source\Repos\Doan_group_6\cs464_project\App.xaml
+92002441516
 2-404771076
-7-594141656
+141766619852
 15325038665
-MainWindow.xaml;View\HomePage.xaml;View\Login.xaml;
+MainWindow.xaml;View\HeThong.xaml;View\HomePage.xaml;View\Login.xaml;View_Body\QuanLyHoaDon.xaml;View_Body\QuanLyKhachHang.xaml;View_Body\QuanLyNhanVien.xaml;View_Body\QuanLySanPham.xaml;View_Body\ThongKeDoanhThu.xaml;
 
 True
 

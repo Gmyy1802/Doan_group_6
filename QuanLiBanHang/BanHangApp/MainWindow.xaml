@@ -1,0 +1,92 @@
+﻿<Window x:Class="BanHangApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Quản lý bán hàng"
+        Height="600"
+        Width="900">
+
+    <Grid Margin="10">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Thông tin hóa đơn -->
+        <StackPanel Orientation="Horizontal">
+
+            <TextBlock Text="Mã hóa đơn:" Margin="5"/>
+            <TextBox x:Name="txtMaHD" Width="150" Margin="5"/>
+
+            <TextBlock Text="Khách hàng:" Margin="5"/>
+            <TextBox x:Name="txtKhachHang" Width="150" Margin="5"/>
+
+            <TextBlock Text="Ngày:" Margin="5"/>
+            <DatePicker x:Name="dpNgay" Width="150" Margin="5"/>
+
+        </StackPanel>
+
+        <!-- Chọn sản phẩm -->
+        <StackPanel Orientation="Horizontal"
+                    Grid.Row="1">
+
+            <ComboBox x:Name="cboSanPham"
+                      Width="200"
+                      Margin="5"/>
+
+            <TextBox x:Name="txtSoLuong"
+                     Width="100"
+                     Margin="5"/>
+
+            <Button Content="Thêm SP"
+                    Click="BtnThemSP_Click"
+                    Margin="5"/>
+
+        </StackPanel>
+
+        <!-- Danh sách -->
+        <DataGrid x:Name="dataGrid"
+                  Grid.Row="2"
+                  AutoGenerateColumns="False">
+
+            <DataGrid.Columns>
+
+                <DataGridTextColumn Header="Tên SP"
+                                    Binding="{Binding TenSP}"/>
+
+                <DataGridTextColumn Header="Đơn giá"
+                                    Binding="{Binding DonGia}"/>
+
+                <DataGridTextColumn Header="Số lượng"
+                                    Binding="{Binding SoLuong}"/>
+
+                <DataGridTextColumn Header="Thành tiền"
+                                    Binding="{Binding ThanhTien}"/>
+
+            </DataGrid.Columns>
+
+        </DataGrid>
+
+        <!-- Tổng tiền + lưu -->
+        <StackPanel Grid.Row="3"
+                    Orientation="Horizontal">
+
+            <TextBlock Text="Tổng tiền:"
+                       FontSize="18"
+                       Margin="5"/>
+
+            <TextBlock x:Name="txtTongTien"
+                       FontSize="18"
+                       Margin="5"/>
+
+            <Button Content="Lưu hóa đơn"
+                    Click="BtnLuuHoaDon_Click"
+                    Margin="20,5"/>
+
+        </StackPanel>
+
+    </Grid>
+
+</Window>
