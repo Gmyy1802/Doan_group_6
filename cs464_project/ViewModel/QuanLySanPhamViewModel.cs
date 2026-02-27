@@ -10,6 +10,7 @@ namespace cs464_project.ViewModel
 {
     public class QuanLySanPhamViewModel : BaseViewModel
     {
+        private string _maSP;
         private string _tenSP;
         private string _donVi;
         private string _giaBan;
@@ -20,6 +21,12 @@ namespace cs464_project.ViewModel
         private string _timKiem;
         private ProductItem _selectedProduct;
         private CategoryItem _selectedCategory;
+
+        public string MaSP
+        {
+            get => _maSP;
+            set => SetProperty(ref _maSP, value);
+        }
 
         public string TenSP
         {
@@ -76,6 +83,7 @@ namespace cs464_project.ViewModel
             {
                 if (SetProperty(ref _selectedProduct, value) && value != null)
                 {
+                    MaSP = value.ProductCode;
                     TenSP = value.ProductName;
                     DonVi = value.Unit;
                     GiaBan = value.Price.ToString();
@@ -131,7 +139,7 @@ namespace cs464_project.ViewModel
                 {
                     conn.Open();
                     var cmd = new SqlCommand(
-                        @"select p.ProductId, p.ProductName, c.CategoryName, 
+                        @"select p.ProductId, p.ProductCode, p.ProductName, c.CategoryName, 
                           p.Unit, p.Price, p.Cost, p.Quantity, p.Description, p.CategoryId, p.IsActive, p.CreatedAt
                           from Products p join Categories c ON p.CategoryId = c.CategoryId", conn);
                     var dt = new DataTable();
@@ -141,6 +149,7 @@ namespace cs464_project.ViewModel
                         Products.Add(new ProductItem
                         {
                             ProductId = Convert.ToInt32(row["ProductId"]),
+                            ProductCode = row["ProductCode"]?.ToString(),
                             ProductName = row["ProductName"]?.ToString(),
                             CategoryName = row["CategoryName"]?.ToString(),
                             Unit = row["Unit"]?.ToString(),
@@ -182,10 +191,10 @@ namespace cs464_project.ViewModel
                 {
                     conn.Open();
                     var cmd = new SqlCommand(
-                        @"select p.ProductId, p.ProductName, c.CategoryName, 
+                        @"select p.ProductId, p.ProductCode, p.ProductName, c.CategoryName, 
                           p.Unit, p.Price, p.Cost, p.Quantity, p.Description, p.CategoryId, p.IsActive, p.CreatedAt
                           FROM Products p join Categories c ON p.CategoryId = c.CategoryId
-                          where p.ProductName LIKE @kw", conn);
+                          where p.ProductName LIKE @kw OR p.ProductCode LIKE @kw", conn);
                     cmd.Parameters.AddWithValue("@kw", "%" + (TimKiem ?? "") + "%");
                     var dt = new DataTable();
                     dt.Load(cmd.ExecuteReader());
@@ -194,6 +203,7 @@ namespace cs464_project.ViewModel
                         Products.Add(new ProductItem
                         {
                             ProductId = Convert.ToInt32(row["ProductId"]),
+                            ProductCode = row["ProductCode"]?.ToString(),
                             ProductName = row["ProductName"]?.ToString(),
                             CategoryName = row["CategoryName"]?.ToString(),
                             Unit = row["Unit"]?.ToString(),
@@ -216,14 +226,28 @@ namespace cs464_project.ViewModel
 
         private void ExecuteAdd(object parameter)
         {
+            if (string.IsNullOrWhiteSpace(MaSP))
+            {
+                MessageBox.Show("Vui lòng nhập mã sản phẩm!");
+                return;
+            }
             try
             {
                 using (var conn = DbHelper.GetConnection())
                 {
                     conn.Open();
+                    var checkCmd = new SqlCommand("SELECT COUNT(*) FROM Products WHERE ProductCode = @code", conn);
+                    checkCmd.Parameters.AddWithValue("@code", MaSP?.Trim() ?? "");
+                    int count = (int)checkCmd.ExecuteScalar();
+                    if (count > 0)
+                    {
+                        MessageBox.Show("Mã sản phẩm đã tồn tại! Vui lòng nhập mã khác.");
+                        return;
+                    }
                     var cmd = new SqlCommand(
-                        @"INSERT INTO Products (ProductName, CategoryId, Unit, Price, Cost, Quantity, Description, IsActive, CreatedAt)
-                          VALUES (@name, @cat, @unit, @price, @cost, @qty, @desc, 1, GETDATE())", conn);
+                        @"INSERT INTO Products (ProductCode, ProductName, CategoryId, Unit, Price, Cost, Quantity, Description, IsActive, CreatedAt)
+                          VALUES (@code, @name, @cat, @unit, @price, @cost, @qty, @desc, 1, GETDATE())", conn);
+                    cmd.Parameters.AddWithValue("@code", MaSP?.Trim() ?? "");
                     cmd.Parameters.AddWithValue("@name", TenSP?.Trim() ?? "");
                     cmd.Parameters.AddWithValue("@cat", CategoryId ?? (object)DBNull.Value);
                     cmd.Parameters.AddWithValue("@unit", DonVi?.Trim() ?? "");
@@ -246,16 +270,31 @@ namespace cs464_project.ViewModel
         private void ExecuteEdit(object parameter)
         {
             if (SelectedProduct == null) { MessageBox.Show("Vui lòng chọn sản phẩm cần sửa."); return; }
+            if (string.IsNullOrWhiteSpace(MaSP))
+            {
+                MessageBox.Show("Vui lòng nhập mã sản phẩm!");
+                return;
+            }
             try
             {
                 using (var conn = DbHelper.GetConnection())
                 {
                     conn.Open();
+                    var checkCmd = new SqlCommand("SELECT COUNT(*) FROM Products WHERE ProductCode = @code AND ProductId != @id", conn);
+                    checkCmd.Parameters.AddWithValue("@code", MaSP?.Trim() ?? "");
+                    checkCmd.Parameters.AddWithValue("@id", SelectedProduct.ProductId);
+                    int count = (int)checkCmd.ExecuteScalar();
+                    if (count > 0)
+                    {
+                        MessageBox.Show("Mã sản phẩm đã tồn tại! Vui lòng nhập mã khác.");
+                        return;
+                    }
                     var cmd = new SqlCommand(
-                        @"UPDATE Products SET ProductName=@name, CategoryId=@cat, Unit=@unit, 
+                        @"UPDATE Products SET ProductCode=@code, ProductName=@name, CategoryId=@cat, Unit=@unit, 
                           Price=@price, Cost=@cost, Quantity=@qty, Description=@desc
                           WHERE ProductId=@id", conn);
                     cmd.Parameters.AddWithValue("@id", SelectedProduct.ProductId);
+                    cmd.Parameters.AddWithValue("@code", MaSP?.Trim() ?? "");
                     cmd.Parameters.AddWithValue("@name", TenSP?.Trim() ?? "");
                     cmd.Parameters.AddWithValue("@cat", CategoryId ?? (object)DBNull.Value);
                     cmd.Parameters.AddWithValue("@unit", DonVi?.Trim() ?? "");
@@ -263,7 +302,6 @@ namespace cs464_project.ViewModel
                     cmd.Parameters.AddWithValue("@cost", decimal.Parse(GiaNhap ?? "0"));
                     cmd.Parameters.AddWithValue("@qty", int.Parse(SoLuong ?? "0"));
                     cmd.Parameters.AddWithValue("@desc", MoTa?.Trim() ?? "");
-                    cmd.Parameters.AddWithValue("@id", SelectedProduct.ProductId);
                     cmd.ExecuteNonQuery();
                 }
                 MessageBox.Show("Cập nhật thành công!");
@@ -300,6 +338,7 @@ namespace cs464_project.ViewModel
 
         private void ExecuteRefresh(object parameter)
         {
+            MaSP = "";
             TenSP = "";
             DonVi = "";
             GiaBan = "";
@@ -316,6 +355,7 @@ namespace cs464_project.ViewModel
     public class ProductItem
     {
         public int ProductId { get; set; }
+        public string ProductCode { get; set; }
         public string ProductName { get; set; }
         public int? CategoryId { get; set; }
         public string CategoryName { get; set; }

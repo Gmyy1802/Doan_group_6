@@ -4,12 +4,17 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:cs464_project.View"
+        xmlns:vm="clr-namespace:cs464_project.ViewModel"
         mc:Ignorable="d"
         Title="Đăng nhập - Quản lý cửa hàng điện thoại"
         Height="520" Width="880"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         Background="#F3F6FB">
+
+    <Window.DataContext>
+        <vm:LoginViewModel/>
+    </Window.DataContext>
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -97,15 +102,16 @@
                                            FontSize="14"
                                            Foreground="#64748B" Margin="10,0"/>
 
-                                <TextBox x:Name="txt_DN"
+<TextBox x:Name="txt_DN"
                                          Grid.Column="1"
-                                         Height="42
-                                         "
+                                         Height="42"
                                          Padding="10,0,10,0"
                                          BorderThickness="0"
                                          Background="Transparent"
                                          FontSize="14"
-                                         VerticalContentAlignment="Center" Grid.ColumnSpan="2"/>
+                                         VerticalContentAlignment="Center" 
+                                         Grid.ColumnSpan="2"
+                                         Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"/>
                             </Grid>
                         </Border>
                     </StackPanel>
@@ -130,13 +136,15 @@
                                            FontSize="14"
                                            Foreground="#64748B"/>
 
-                                <PasswordBox x:Name="pw_mk"
+<PasswordBox x:Name="pw_mk"
                                              Grid.Column="1"
-                                           Height="19"
+                                            Height="19"
                                              Padding="10,0,10,0"
                                              BorderThickness="0"
                                              Background="Transparent"
-                                             FontSize="14"    PasswordChanged="pw_mk_PasswordChanged"/>
+                                             FontSize="14"    
+                                             PasswordChanged="pw_mk_PasswordChanged"
+                                             Visibility="{Binding IsPasswordVisible, Converter={StaticResource InverseBoolToVisConverter}}"/>
 
                                 <TextBox x:Name="txtPasswordVisible"
                                          Grid.Column="1"
@@ -146,17 +154,17 @@
                                          Background="Transparent"
                                          FontSize="14"
                                          VerticalContentAlignment="Center"
-                                         Visibility="Collapsed"
+                                         Visibility="{Binding IsPasswordVisible, Converter={StaticResource BoolToVisConverter}}"
                                          TextChanged="txtPasswordVisible_TextChanged"/>
 
-                                <Button x:Name="btnTogglePassword"
+<Button x:Name="btnTogglePassword"
                                         Grid.Column="2"
                                         Width="36" Height="36"
                                         Margin="4"
                                         Background="Transparent"
                                         BorderThickness="0"
                                         Cursor="Hand"
-                                        Click="btnTogglePassword_Click"
+                                        Command="{Binding TogglePasswordCommand}"
                                         ToolTip="Ẩn/Hiện mật khẩu">
                                     <TextBlock x:Name="txtEyeIcon"
                                                Text="👁"
@@ -187,14 +195,14 @@
                     </Grid>
 
                     <StackPanel Grid.Row="4">
-                        <Button Content="Đăng nhập"
+<Button Content="Đăng nhập"
                                 Height="44"
                                 FontWeight="SemiBold"
                                 Background="#0F62FE"
                                 Foreground="White"
                                 BorderThickness="0"
                                 Cursor="Hand"
-                                Click="BtnLogin_Click">
+                                Command="{Binding LoginCommand}">
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
                                     <Border Background="{TemplateBinding Background}" CornerRadius="12" Padding="10">
@@ -204,7 +212,7 @@
                             </Button.Template>
                         </Button>
 
-                        <Button Content="Thoát"
+<Button Content="Thoát"
                                 Height="44"
                                 Margin="0,10,0,0"
                                 FontWeight="SemiBold"
@@ -212,7 +220,7 @@
                                 Foreground="#1E293B"
                                 BorderThickness="0"
                                 Cursor="Hand"
-                                Click="BtnThoat_Click">
+                                Command="{Binding ExitCommand}">
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
                                     <Border Background="{TemplateBinding Background}" CornerRadius="12" Padding="10">

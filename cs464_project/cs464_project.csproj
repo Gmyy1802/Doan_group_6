@@ -77,8 +77,9 @@
     <Compile Include="ViewModel\BaseViewModel.cs" />
     <Compile Include="DataAccess\DbHelper.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
-    <Compile Include="ViewModel\QuanLySanPhamViewModel.cs" />
+<Compile Include="ViewModel\QuanLySanPhamViewModel.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
+    <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="View\HeThong.xaml.cs">
       <DependentUpon>HeThong.xaml</DependentUpon>
     </Compile>
