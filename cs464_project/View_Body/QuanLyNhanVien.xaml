@@ -4,77 +4,302 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:cs464_project.View_Body"
+        xmlns:vm="clr-namespace:cs464_project.ViewModel"
         mc:Ignorable="d"
+        Background="#F0F4F8"
         Loaded="Window_Loaded">
-    <Grid Margin="10">
+    <UserControl.DataContext>
+        <vm:QuanLyNhanVienViewModel/>
+    </UserControl.DataContext>
+
+    <UserControl.Resources>
+        <!-- Rounded TextBox Style -->
+        <Style x:Key="RoundedTextBox" TargetType="TextBox">
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Padding" Value="10,0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Background" Value="#F8FAFC"/>
+            <Setter Property="Foreground" Value="#1E293B"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="#D8DEE9" BorderThickness="1"
+                                CornerRadius="8">
+                            <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}"
+                                          VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Rounded ReadOnly TextBox Style -->
+        <Style x:Key="RoundedTextBoxReadOnly" TargetType="TextBox" BasedOn="{StaticResource RoundedTextBox}">
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="Background" Value="#EAECF0"/>
+        </Style>
+
+        <!-- Rounded ComboBox Style -->
+        <Style x:Key="RoundedComboBox" TargetType="ComboBox">
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Padding" Value="10,0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Background" Value="#F8FAFC"/>
+            <Setter Property="Foreground" Value="#1E293B"/>
+            <Setter Property="BorderBrush" Value="#D8DEE9"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+
+        <!-- Rounded DatePicker Style -->
+        <Style x:Key="RoundedDatePicker" TargetType="DatePicker">
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Padding" Value="10,0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Background" Value="#F8FAFC"/>
+            <Setter Property="Foreground" Value="#1E293B"/>
+            <Setter Property="BorderBrush" Value="#D8DEE9"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+
+        <!-- Rounded Button Template -->
+        <Style x:Key="RoundedButton" TargetType="Button">
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}"
+                                CornerRadius="8" Padding="16,0">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Opacity" Value="0.85"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Opacity" Value="0.7"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Form Label Style -->
+        <Style x:Key="FormLabel" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12.5"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Foreground" Value="#64748B"/>
+            <Setter Property="Margin" Value="0,0,0,5"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Margin="24">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="280"/>
-        </Grid.ColumnDefinitions>
 
-        <!-- Search Bar -->
-        <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Margin="0,0,0,10">
-            <TextBlock Text="Tìm kiếm:" VerticalAlignment="Center" Margin="0,0,5,0"/>
-            <TextBox x:Name="txtTimKiem" Width="250" Height="28" VerticalContentAlignment="Center" Margin="0,0,5,0"/>
-            <Button x:Name="btnTimKiem" Content="Tìm kiếm" Width="80" Height="28" Click="BtnTimKiem_Click"/>
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,20">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="🧑‍💼" FontSize="26" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="Quản Lý Nhân Viên" FontSize="22" FontWeight="Bold" Foreground="#1E293B"/>
+                    <TextBlock Text="Quản lý thông tin nhân viên trong hệ thống" FontSize="13" Foreground="#64748B" Margin="0,2,0,0"/>
+                </StackPanel>
+            </StackPanel>
         </StackPanel>
 
-        <!-- DataGrid -->
-        <DataGrid x:Name="dgNhanVien" Grid.Row="1" Grid.Column="0" Margin="0,0,10,0"
-                  AutoGenerateColumns="False" IsReadOnly="True"
-                  SelectionMode="Single" SelectionChanged="DgNhanVien_SelectionChanged"
-                  CanUserAddRows="False" CanUserDeleteRows="False"
-                  HeadersVisibility="Column" AlternatingRowBackground="#F5F5F5">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Mã NV" Binding="{Binding EmployeeCode}" Width="80"/>
-                <DataGridTextColumn Header="Họ tên" Binding="{Binding FullName}" Width="150"/>
-                <DataGridTextColumn Header="Giới tính" Binding="{Binding Gender}" Width="70"/>
-                <DataGridTextColumn Header="Ngày sinh" Binding="{Binding BirthDate, StringFormat=dd/MM/yyyy}" Width="90"/>
-                <DataGridTextColumn Header="Địa chỉ" Binding="{Binding Address}" Width="150"/>
-                <DataGridTextColumn Header="Ngày vào" Binding="{Binding HireDate, StringFormat=dd/MM/yyyy}" Width="90"/>
-                <DataGridTextColumn Header="Lương cơ bản" Binding="{Binding BaseSalary, StringFormat=N0}" Width="100"/>
-                <DataGridTextColumn Header="Trạng thái" Binding="{Binding StatusText}" Width="80"/>
-            </DataGrid.Columns>
-        </DataGrid>
+        <!-- Search Bar Card -->
+        <Border Grid.Row="1" Background="White" CornerRadius="14" Padding="16" Margin="0,0,0,16">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="16" ShadowDepth="2" Opacity="0.08" Color="Black" Direction="270"/>
+            </Border.Effect>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="🔍" FontSize="16" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                <TextBox x:Name="txtTimKiem" Width="320" Style="{StaticResource RoundedTextBox}" Text="{Binding TimKiem, UpdateSourceTrigger=PropertyChanged}"/>
+                <Button x:Name="btnTimKiem" Content="Tìm kiếm" Width="100" Margin="10,0,0,0"
+                        Background="#0F62FE" Style="{StaticResource RoundedButton}"
+                        Command="{Binding SearchCommand}"/>
+            </StackPanel>
+        </Border>
 
-        <!-- Form Panel -->
-        <StackPanel Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Margin="0,0,0,0">
-            <TextBlock Text="Thông tin nhân viên" FontWeight="Bold" FontSize="14" Margin="0,0,0,10"/>
+        <!-- Main Content -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="320"/>
+            </Grid.ColumnDefinitions>
 
-            <TextBlock Text="Mã NV:" Margin="0,0,0,3"/>
-            <TextBox x:Name="txtMaNV" Height="28" IsReadOnly="True" Background="#EEEEEE" VerticalContentAlignment="Center" Margin="0,0,0,8"/>
+            <!-- DataGrid Card -->
+            <Border Grid.Column="0" Background="White" CornerRadius="14" Padding="0" Margin="0,0,16,0"
+                    ClipToBounds="True">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="16" ShadowDepth="2" Opacity="0.08" Color="Black" Direction="270"/>
+                </Border.Effect>
+                <DataGrid x:Name="dgNhanVien"
+                          ItemsSource="{Binding Employees}"
+                          SelectedItem="{Binding SelectedEmployee, Mode=TwoWay}"
+                          AutoGenerateColumns="False" IsReadOnly="True"
+                          SelectionMode="Single"
+                          CanUserAddRows="False" CanUserDeleteRows="False"
+                          HeadersVisibility="Column"
+                          GridLinesVisibility="None"
+                          BorderThickness="0"
+                          Background="White"
+                          RowHeight="36"
+                          FontSize="13"
+                          AlternatingRowBackground="#F8FAFC"
+                          RowBackground="White"
+                          Foreground="#1E293B"
+                          HorizontalGridLinesBrush="#E2E8F0"
+                          VerticalScrollBarVisibility="Auto">
 
-            <TextBlock Text="Họ tên:" Margin="0,0,0,3"/>
-            <TextBox x:Name="txtHoTen" Height="28" VerticalContentAlignment="Center" Margin="0,0,0,8"/>
+                    <DataGrid.ColumnHeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="Background" Value="#F1F5F9"/>
+                            <Setter Property="Foreground" Value="#64748B"/>
+                            <Setter Property="FontWeight" Value="SemiBold"/>
+                            <Setter Property="FontSize" Value="12.5"/>
+                            <Setter Property="Height" Value="40"/>
+                            <Setter Property="Padding" Value="12,0"/>
+                            <Setter Property="BorderBrush" Value="#E2E8F0"/>
+                            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
 
-            <TextBlock Text="Giới tính:" Margin="0,0,0,3"/>
-            <ComboBox x:Name="cboGioiTinh" Height="28" Margin="0,0,0,8">
-                <ComboBoxItem Content="Nam"/>
-                <ComboBoxItem Content="Nữ"/>
-            </ComboBox>
+                    <DataGrid.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="Padding" Value="12,0"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="DataGridCell">
+                                        <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                                            <ContentPresenter VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="#DBEAFE"/>
+                                    <Setter Property="Foreground" Value="#1E293B"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.CellStyle>
 
-            <TextBlock Text="Ngày sinh:" Margin="0,0,0,3"/>
-            <DatePicker x:Name="dpNgaySinh" Height="28" Margin="0,0,0,8"/>
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="#DBEAFE"/>
+                                </Trigger>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#EFF6FF"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
 
-            <TextBlock Text="Địa chỉ:" Margin="0,0,0,3"/>
-            <TextBox x:Name="txtDiaChi" Height="28" VerticalContentAlignment="Center" Margin="0,0,0,8"/>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Mã NV" Binding="{Binding EmployeeCode}" Width="80"/>
+                        <DataGridTextColumn Header="Họ tên" Binding="{Binding FullName}" Width="*"/>
+                        <DataGridTextColumn Header="Giới tính" Binding="{Binding Gender}" Width="75"/>
+                        <DataGridTextColumn Header="Ngày sinh" Binding="{Binding BirthDate, StringFormat=dd/MM/yyyy}" Width="95"/>
+                        <DataGridTextColumn Header="Địa chỉ" Binding="{Binding Address}" Width="150"/>
+                        <DataGridTextColumn Header="Ngày vào" Binding="{Binding HireDate, StringFormat=dd/MM/yyyy}" Width="95"/>
+                        <DataGridTextColumn Header="Lương CB" Binding="{Binding BaseSalary, StringFormat=N0}" Width="100"/>
+                        <DataGridTextColumn Header="Trạng thái" Binding="{Binding StatusText}" Width="85"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
 
-            <TextBlock Text="Ngày vào làm:" Margin="0,0,0,3"/>
-            <DatePicker x:Name="dpNgayVao" Height="28" Margin="0,0,0,8"/>
+            <!-- Right Panel Card -->
+            <Border Grid.Column="1" Background="White" CornerRadius="14" Padding="20">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="16" ShadowDepth="2" Opacity="0.08" Color="Black" Direction="270"/>
+                </Border.Effect>
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel>
+                        <!-- Panel Header -->
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,18">
+                            <TextBlock Text="📋" FontSize="18" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <TextBlock Text="Thông Tin Nhân Viên" FontSize="16" FontWeight="Bold" Foreground="#1E293B"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
 
-            <TextBlock Text="Lương cơ bản:" Margin="0,0,0,3"/>
-            <TextBox x:Name="txtLuong" Height="28" VerticalContentAlignment="Center" Margin="0,0,0,15"/>
+                        <!-- Mã NV -->
+                        <TextBlock Text="Mã nhân viên" Style="{StaticResource FormLabel}"/>
+                        <TextBox x:Name="txtMaNV" Style="{StaticResource RoundedTextBoxReadOnly}" Margin="0,0,0,12" Text="{Binding MaNV, Mode=OneWay}"/>
 
-            <WrapPanel HorizontalAlignment="Center">
-                <Button x:Name="btnThem" Content="Thêm" Width="60" Height="30" Margin="3" Click="BtnThem_Click"/>
-                <Button x:Name="btnSua" Content="Sửa" Width="60" Height="30" Margin="3" Click="BtnSua_Click"/>
-                <Button x:Name="btnXoa" Content="Xóa" Width="60" Height="30" Margin="3" Click="BtnXoa_Click"/>
-                <Button x:Name="btnLamMoi" Content="Làm mới" Width="70" Height="30" Margin="3" Click="BtnLamMoi_Click"/>
-            </WrapPanel>
-        </StackPanel>
+                        <!-- Họ tên -->
+                        <TextBlock Text="Họ và tên" Style="{StaticResource FormLabel}"/>
+                        <TextBox x:Name="txtHoTen" Style="{StaticResource RoundedTextBox}" Margin="0,0,0,12" Text="{Binding HoTen, UpdateSourceTrigger=PropertyChanged}"/>
+
+                        <!-- Giới tính -->
+                        <TextBlock Text="Giới tính" Style="{StaticResource FormLabel}"/>
+                        <ComboBox x:Name="cboGioiTinh" Style="{StaticResource RoundedComboBox}" Margin="0,0,0,12" Text="{Binding GioiTinh, UpdateSourceTrigger=PropertyChanged}">
+                            <ComboBoxItem Content="Nam"/>
+                            <ComboBoxItem Content="Nữ"/>
+                        </ComboBox>
+
+                        <!-- Ngày sinh -->
+                        <TextBlock Text="Ngày sinh" Style="{StaticResource FormLabel}"/>
+                        <DatePicker x:Name="dpNgaySinh" Style="{StaticResource RoundedDatePicker}" Margin="0,0,0,12" SelectedDate="{Binding NgaySinh, UpdateSourceTrigger=PropertyChanged}"/>
+
+                        <!-- Địa chỉ -->
+                        <TextBlock Text="Địa chỉ" Style="{StaticResource FormLabel}"/>
+                        <TextBox x:Name="txtDiaChi" Style="{StaticResource RoundedTextBox}" Margin="0,0,0,12" Text="{Binding DiaChi, UpdateSourceTrigger=PropertyChanged}"/>
+
+                        <!-- Ngày vào làm -->
+                        <TextBlock Text="Ngày vào làm" Style="{StaticResource FormLabel}"/>
+                        <DatePicker x:Name="dpNgayVao" Style="{StaticResource RoundedDatePicker}" Margin="0,0,0,12" SelectedDate="{Binding NgayVao, UpdateSourceTrigger=PropertyChanged}"/>
+
+                        <!-- Lương cơ bản -->
+                        <TextBlock Text="Lương cơ bản" Style="{StaticResource FormLabel}"/>
+                        <TextBox x:Name="txtLuong" Style="{StaticResource RoundedTextBox}" Margin="0,0,0,20" Text="{Binding LuongCoBan, UpdateSourceTrigger=PropertyChanged}"/>
+
+                        <!-- Action Buttons -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Button x:Name="btnThem" Content="✚ Thêm" Grid.Row="0" Grid.Column="0"
+                                    Background="#16A34A" Margin="0,0,5,8"
+                                    Style="{StaticResource RoundedButton}" Command="{Binding AddCommand}"/>
+                            <Button x:Name="btnSua" Content="✏ Sửa" Grid.Row="0" Grid.Column="1"
+                                    Background="#0F62FE" Margin="5,0,0,8"
+                                    Style="{StaticResource RoundedButton}" Command="{Binding EditCommand}"/>
+                            <Button x:Name="btnXoa" Content="🗑 Xóa" Grid.Row="1" Grid.Column="0"
+                                    Background="#DC2626" Margin="0,0,5,0"
+                                    Style="{StaticResource RoundedButton}" Command="{Binding DeleteCommand}"/>
+                            <Button x:Name="btnLamMoi" Content="↻ Làm mới" Grid.Row="1" Grid.Column="1"
+                                    Background="#6B7280" Margin="5,0,0,0"
+                                    Style="{StaticResource RoundedButton}" Command="{Binding RefreshCommand}"/>
+                        </Grid>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
     </Grid>
 </UserControl>

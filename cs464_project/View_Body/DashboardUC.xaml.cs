@@ -1,3 +1,4 @@
+using System.Windows;
 using System.Windows.Controls;
 
 namespace cs464_project.View_Body
@@ -9,8 +10,12 @@ namespace cs464_project.View_Body
             InitializeComponent();
         }
 
-        private void UserControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
+            if (DataContext is ViewModel.DashboardViewModel vm)
+            {
+                vm.LoadData();
+            }
         }
     }
 }

@@ -6,82 +6,258 @@
         xmlns:local="clr-namespace:cs464_project.View_Body"
         xmlns:vm="clr-namespace:cs464_project.ViewModel"
         mc:Ignorable="d"
-        Loaded="Window_Loaded">
+        Loaded="Window_Loaded"
+        Background="#F0F4F8">
     <UserControl.DataContext>
         <vm:QuanLySanPhamViewModel/>
     </UserControl.DataContext>
-    <Grid Margin="10">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
 
-        <!-- Search Bar -->
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
-            <TextBlock Text="Tìm kiếm:" VerticalAlignment="Center" Margin="0,0,5,0"/>
-            <TextBox Text="{Binding TimKiem, UpdateSourceTrigger=PropertyChanged}" Width="250" Height="28" VerticalContentAlignment="Center" Margin="0,0,5,0"/>
-            <Button Content="Tìm kiếm" Command="{Binding SearchCommand}" Width="80" Height="28"/>
-        </StackPanel>
+    <UserControl.Resources>
+        <!-- Rounded TextBox Style -->
+        <Style x:Key="RoundedTextBox" TargetType="TextBox">
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="Padding" Value="10,0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="#1E293B"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Background="#F8FAFC" BorderBrush="#D8DEE9" BorderThickness="1" CornerRadius="8">
+                            <ScrollViewer x:Name="PART_ContentHost" Margin="0"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="300"/>
-            </Grid.ColumnDefinitions>
+        <!-- Rounded ComboBox Style -->
+        <Style x:Key="RoundedComboBox" TargetType="ComboBox">
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="#1E293B"/>
+            <Setter Property="Background" Value="#F8FAFC"/>
+            <Setter Property="BorderBrush" Value="#D8DEE9"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
 
-            <!-- DataGrid -->
-            <DataGrid ItemsSource="{Binding Products}" SelectedItem="{Binding SelectedProduct}" Grid.Column="0" Margin="0,0,10,0"
-                      AutoGenerateColumns="False" IsReadOnly="True"
-                      SelectionMode="Single"
-                      CanUserAddRows="False" CanUserDeleteRows="False">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Mã SP" Binding="{Binding ProductCode}" Width="80"/>
-                    <DataGridTextColumn Header="Tên SP" Binding="{Binding ProductName}" Width="*"/>
-                    <DataGridTextColumn Header="Loại" Binding="{Binding CategoryName}" Width="100"/>
-                    <DataGridTextColumn Header="Đơn vị" Binding="{Binding Unit}" Width="70"/>
-                    <DataGridTextColumn Header="Giá bán" Binding="{Binding Price, StringFormat=N0}" Width="90"/>
-                    <DataGridTextColumn Header="Số lượng" Binding="{Binding Quantity}" Width="70"/>
-                </DataGrid.Columns>
-            </DataGrid>
+        <!-- Base Button Style with Rounded Template -->
+        <Style x:Key="RoundedButton" TargetType="Button">
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="10" Padding="16,0">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Opacity" Value="0.85"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Opacity" Value="0.7"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="border" Property="Opacity" Value="0.45"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
-            <!-- Form Panel -->
-            <Border Grid.Column="1" BorderBrush="Gray" BorderThickness="1" Padding="10" CornerRadius="4">
-                    <StackPanel>
-                    <TextBlock Text="Thông tin sản phẩm" FontWeight="Bold" FontSize="14" Margin="0,0,0,10"/>
+        <!-- DataGrid Column Header Style -->
+        <Style x:Key="ModernColumnHeader" TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="#F1F5F9"/>
+            <Setter Property="Foreground" Value="#475569"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="12.5"/>
+            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="BorderBrush" Value="#E2E8F0"/>
+            <Setter Property="BorderThickness" Value="0,0,1,1"/>
+        </Style>
 
-                    <TextBlock Text="Mã SP:" Margin="0,0,0,3"/>
-                    <TextBox Text="{Binding MaSP}" Height="28" Margin="0,0,0,8" VerticalContentAlignment="Center"/>
+        <!-- DataGrid Cell Style -->
+        <Style x:Key="ModernCell" TargetType="DataGridCell">
+            <Setter Property="Padding" Value="12,0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="#1E293B"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="DataGridCell">
+                        <Border Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}">
+                            <ContentPresenter VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#DBEAFE"/>
+                    <Setter Property="Foreground" Value="#1E293B"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
 
-                    <TextBlock Text="Tên SP:" Margin="0,0,0,3"/>
-                    <TextBox Text="{Binding TenSP}" Height="28" Margin="0,0,0,8" VerticalContentAlignment="Center"/>
+        <!-- DataGrid Row Style -->
+        <Style x:Key="ModernRow" TargetType="DataGridRow">
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Style.Triggers>
+                <Trigger Property="AlternationIndex" Value="1">
+                    <Setter Property="Background" Value="#F8FAFC"/>
+                </Trigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#DBEAFE"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#EFF6FF"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
 
-                    <TextBlock Text="Loại:" Margin="0,0,0,3"/>
-                    <ComboBox ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory}" Height="28" Margin="0,0,0,8"
-                              DisplayMemberPath="CategoryName"/>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <Grid Margin="24,20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-                    <TextBlock Text="Đơn vị:" Margin="0,0,0,3"/>
-                    <TextBox Text="{Binding DonVi}" Height="28" Margin="0,0,0,8" VerticalContentAlignment="Center"/>
+            <!-- Header Section -->
+            <StackPanel Grid.Row="0" Margin="0,0,0,18">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="📦" FontSize="26" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="Quản Lý Sản Phẩm" FontSize="22" FontWeight="Bold" Foreground="#1E293B"/>
+                        <TextBlock Text="Quản lý danh sách sản phẩm, thêm mới, chỉnh sửa và xóa sản phẩm" FontSize="13" Foreground="#64748B" Margin="0,2,0,0"/>
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
 
-                    <TextBlock Text="Giá bán:" Margin="0,0,0,3"/>
-                    <TextBox Text="{Binding GiaBan}" Height="28" Margin="0,0,0,8" VerticalContentAlignment="Center"/>
-
-                    <TextBlock Text="Giá nhập:" Margin="0,0,0,3"/>
-                    <TextBox Text="{Binding GiaNhap}" Height="28" Margin="0,0,0,8" VerticalContentAlignment="Center"/>
-
-                    <TextBlock Text="Số lượng:" Margin="0,0,0,3"/>
-                    <TextBox Text="{Binding SoLuong}" Height="28" Margin="0,0,0,8" VerticalContentAlignment="Center"/>
-
-                    <TextBlock Text="Mô tả:" Margin="0,0,0,3"/>
-                    <TextBox Text="{Binding MoTa}" Height="28" Margin="0,0,0,12" VerticalContentAlignment="Center"/>
-
-                    <WrapPanel HorizontalAlignment="Center">
-                        <Button Content="Thêm" Command="{Binding AddCommand}" Width="60" Height="28" Margin="3"/>
-                        <Button Content="Sửa" Command="{Binding EditCommand}" Width="60" Height="28" Margin="3"/>
-                        <Button Content="Xóa" Command="{Binding DeleteCommand}" Width="60" Height="28" Margin="3"/>
-                        <Button Content="Làm mới" Command="{Binding RefreshCommand}" Width="70" Height="28" Margin="3"/>
-                    </WrapPanel>
+            <!-- Search Bar Card -->
+            <Border Grid.Row="1" Background="White" CornerRadius="14" Padding="18,14" Margin="0,0,0,18">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="16" ShadowDepth="2" Opacity="0.08" Color="Black"/>
+                </Border.Effect>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="🔍" FontSize="16" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <TextBox Text="{Binding TimKiem, UpdateSourceTrigger=PropertyChanged}" 
+                             Width="300" Style="{StaticResource RoundedTextBox}" Margin="0,0,10,0"/>
+                    <Button Content="Tìm kiếm" Command="{Binding SearchCommand}" 
+                            Background="#0F62FE" Width="100"
+                            Style="{StaticResource RoundedButton}"/>
                 </StackPanel>
             </Border>
+
+            <!-- Main Content: DataGrid + Form -->
+            <Grid Grid.Row="2" MinHeight="420">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="340"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- DataGrid Card -->
+                <Border Grid.Column="0" Background="White" CornerRadius="14" Padding="0" Margin="0,0,18,0">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="16" ShadowDepth="2" Opacity="0.08" Color="Black"/>
+                    </Border.Effect>
+                    <DataGrid ItemsSource="{Binding Products}" SelectedItem="{Binding SelectedProduct}"
+                              AutoGenerateColumns="False" IsReadOnly="True"
+                              SelectionMode="Single"
+                              CanUserAddRows="False" CanUserDeleteRows="False"
+                              BorderThickness="0"
+                              Background="Transparent"
+                              GridLinesVisibility="Horizontal"
+                              HorizontalGridLinesBrush="#F1F5F9"
+                              HeadersVisibility="Column"
+                              AlternationCount="2"
+                              ColumnHeaderStyle="{StaticResource ModernColumnHeader}"
+                              CellStyle="{StaticResource ModernCell}"
+                              RowStyle="{StaticResource ModernRow}"
+                              RowHeaderWidth="0">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Mã SP" Binding="{Binding ProductCode}" Width="80"/>
+                            <DataGridTextColumn Header="Tên SP" Binding="{Binding ProductName}" Width="*"/>
+                            <DataGridTextColumn Header="Loại" Binding="{Binding CategoryName}" Width="100"/>
+                            <DataGridTextColumn Header="Đơn vị" Binding="{Binding Unit}" Width="70"/>
+                            <DataGridTextColumn Header="Giá bán" Binding="{Binding Price, StringFormat=N0}" Width="100"/>
+                            <DataGridTextColumn Header="Số lượng" Binding="{Binding Quantity}" Width="80"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Border>
+
+                <!-- Form Panel Card -->
+                <Border Grid.Column="1" Background="White" CornerRadius="14" Padding="22,20">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="16" ShadowDepth="2" Opacity="0.08" Color="Black"/>
+                    </Border.Effect>
+                    <StackPanel>
+                        <!-- Form Title -->
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                            <TextBlock Text="📋" FontSize="18" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <TextBlock Text="Thông Tin Sản Phẩm" FontSize="16" FontWeight="Bold" Foreground="#1E293B" VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <!-- Mã SP -->
+                        <TextBlock Text="Mã SP" FontSize="12.5" Foreground="#64748B" FontWeight="Medium" Margin="0,0,0,5"/>
+                        <TextBox Text="{Binding MaSP}" Style="{StaticResource RoundedTextBox}" Margin="0,0,0,12"/>
+
+                        <!-- Tên SP -->
+                        <TextBlock Text="Tên SP" FontSize="12.5" Foreground="#64748B" FontWeight="Medium" Margin="0,0,0,5"/>
+                        <TextBox Text="{Binding TenSP}" Style="{StaticResource RoundedTextBox}" Margin="0,0,0,12"/>
+
+                        <!-- Loại -->
+                        <TextBlock Text="Loại" FontSize="12.5" Foreground="#64748B" FontWeight="Medium" Margin="0,0,0,5"/>
+                        <ComboBox ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory}" 
+                                  DisplayMemberPath="CategoryName" Style="{StaticResource RoundedComboBox}" Margin="0,0,0,12"/>
+
+                        <!-- Đơn vị -->
+                        <TextBlock Text="Đơn vị" FontSize="12.5" Foreground="#64748B" FontWeight="Medium" Margin="0,0,0,5"/>
+                        <TextBox Text="{Binding DonVi}" Style="{StaticResource RoundedTextBox}" Margin="0,0,0,12"/>
+
+                        <!-- Giá bán -->
+                        <TextBlock Text="Giá bán" FontSize="12.5" Foreground="#64748B" FontWeight="Medium" Margin="0,0,0,5"/>
+                        <TextBox Text="{Binding GiaBan}" Style="{StaticResource RoundedTextBox}" Margin="0,0,0,12"/>
+
+                        <!-- Giá nhập -->
+                        <TextBlock Text="Giá nhập" FontSize="12.5" Foreground="#64748B" FontWeight="Medium" Margin="0,0,0,5"/>
+                        <TextBox Text="{Binding GiaNhap}" Style="{StaticResource RoundedTextBox}" Margin="0,0,0,12"/>
+
+                        <!-- Số lượng -->
+                        <TextBlock Text="Số lượng" FontSize="12.5" Foreground="#64748B" FontWeight="Medium" Margin="0,0,0,5"/>
+                        <TextBox Text="{Binding SoLuong}" Style="{StaticResource RoundedTextBox}" Margin="0,0,0,12"/>
+
+                        <!-- Mô tả -->
+                        <TextBlock Text="Mô tả" FontSize="12.5" Foreground="#64748B" FontWeight="Medium" Margin="0,0,0,5"/>
+                        <TextBox Text="{Binding MoTa}" Style="{StaticResource RoundedTextBox}" Margin="0,0,0,20"/>
+
+                        <!-- Action Buttons -->
+                        <WrapPanel HorizontalAlignment="Center">
+                            <Button Content="Thêm" Command="{Binding AddCommand}" 
+                                    Background="#16A34A" Width="72" Margin="4"
+                                    Style="{StaticResource RoundedButton}"/>
+                            <Button Content="Sửa" Command="{Binding EditCommand}" 
+                                    Background="#0F62FE" Width="72" Margin="4"
+                                    Style="{StaticResource RoundedButton}"/>
+                            <Button Content="Xóa" Command="{Binding DeleteCommand}" 
+                                    Background="#DC2626" Width="72" Margin="4"
+                                    Style="{StaticResource RoundedButton}"/>
+                            <Button Content="Làm mới" Command="{Binding RefreshCommand}" 
+                                    Background="#64748B" Width="80" Margin="4"
+                                    Style="{StaticResource RoundedButton}"/>
+                        </WrapPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
         </Grid>
-    </Grid>
+    </ScrollViewer>
 </UserControl>

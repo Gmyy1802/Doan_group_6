@@ -8,9 +8,5 @@ namespace cs464_project.View_Body
         {
             InitializeComponent();
         }
-
-        private void BtnThongKe_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-        }
     }
 }

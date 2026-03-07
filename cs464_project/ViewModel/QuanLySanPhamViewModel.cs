@@ -1,7 +1,7 @@
 using System;
 using System.Collections.ObjectModel;
-using System.Data;
-using System.Data.SqlClient;
+using System.Data.Entity;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using cs464_project.DataAccess;
@@ -135,43 +135,35 @@ namespace cs464_project.ViewModel
             {
                 Products.Clear();
                 Categories.Clear();
-                using (var conn = DbHelper.GetConnection())
+                using (var db = DbHelper.GetContext())
                 {
-                    conn.Open();
-                    var cmd = new SqlCommand(
-                        @"select p.ProductId, p.ProductCode, p.ProductName, c.CategoryName, 
-                          p.Unit, p.Price, p.Cost, p.Quantity, p.Description, p.CategoryId, p.IsActive, p.CreatedAt
-                          from Products p join Categories c ON p.CategoryId = c.CategoryId", conn);
-                    var dt = new DataTable();
-                    dt.Load(cmd.ExecuteReader());
-                    foreach (DataRow row in dt.Rows)
+                    var products = db.Products.Include(p => p.Category).ToList();
+                    foreach (var p in products)
                     {
                         Products.Add(new ProductItem
                         {
-                            ProductId = Convert.ToInt32(row["ProductId"]),
-                            ProductCode = row["ProductCode"]?.ToString(),
-                            ProductName = row["ProductName"]?.ToString(),
-                            CategoryName = row["CategoryName"]?.ToString(),
-                            Unit = row["Unit"]?.ToString(),
-                            Price = row["Price"] != DBNull.Value ? Convert.ToDecimal(row["Price"]) : 0,
-                            Cost = row["Cost"] != DBNull.Value ? Convert.ToDecimal(row["Cost"]) : 0,
-                            Quantity = row["Quantity"] != DBNull.Value ? Convert.ToInt32(row["Quantity"]) : 0,
-                            Description = row["Description"]?.ToString(),
-                            CategoryId = row["CategoryId"] != DBNull.Value ? Convert.ToInt32(row["CategoryId"]) : (int?)null,
-                            IsActive = row["IsActive"] != DBNull.Value && Convert.ToBoolean(row["IsActive"]),
-                            CreatedAt = row["CreatedAt"] != DBNull.Value ? Convert.ToDateTime(row["CreatedAt"]) : DateTime.Now
+                            ProductId = p.ProductId,
+                            ProductCode = p.ProductCode,
+                            ProductName = p.ProductName,
+                            CategoryName = p.Category?.CategoryName,
+                            Unit = p.Unit,
+                            Price = p.Price,
+                            Cost = p.Cost ?? 0,
+                            Quantity = p.Quantity,
+                            Description = p.Description,
+                            CategoryId = p.CategoryId,
+                            IsActive = p.IsActive,
+                            CreatedAt = p.CreatedAt
                         });
                     }
 
-                    var cmdCat = new SqlCommand("select * from Categories", conn);
-                    var dtCat = new DataTable();
-                    dtCat.Load(cmdCat.ExecuteReader());
-                    foreach (DataRow row in dtCat.Rows)
+                    var categories = db.Categories.ToList();
+                    foreach (var c in categories)
                     {
                         Categories.Add(new CategoryItem
                         {
-                            CategoryId = Convert.ToInt32(row["CategoryId"]),
-                            CategoryName = row["CategoryName"]?.ToString()
+                            CategoryId = c.CategoryId,
+                            CategoryName = c.CategoryName
                         });
                     }
                 }
@@ -187,33 +179,33 @@ namespace cs464_project.ViewModel
             try
             {
                 Products.Clear();
-                using (var conn = DbHelper.GetConnection())
+                using (var db = DbHelper.GetContext())
                 {
-                    conn.Open();
-                    var cmd = new SqlCommand(
-                        @"select p.ProductId, p.ProductCode, p.ProductName, c.CategoryName, 
-                          p.Unit, p.Price, p.Cost, p.Quantity, p.Description, p.CategoryId, p.IsActive, p.CreatedAt
-                          FROM Products p join Categories c ON p.CategoryId = c.CategoryId
-                          where p.ProductName LIKE @kw OR p.ProductCode LIKE @kw", conn);
-                    cmd.Parameters.AddWithValue("@kw", "%" + (TimKiem ?? "") + "%");
-                    var dt = new DataTable();
-                    dt.Load(cmd.ExecuteReader());
-                    foreach (DataRow row in dt.Rows)
+                    string kw = (TimKiem ?? "").Trim().ToLower();
+                    var query = db.Products.Include(p => p.Category).AsQueryable();
+
+                    if (!string.IsNullOrEmpty(kw))
+                    {
+                        query = query.Where(p => p.ProductName.ToLower().Contains(kw)
+                                              || p.ProductCode.ToLower().Contains(kw));
+                    }
+
+                    foreach (var p in query.ToList())
                     {
                         Products.Add(new ProductItem
                         {
-                            ProductId = Convert.ToInt32(row["ProductId"]),
-                            ProductCode = row["ProductCode"]?.ToString(),
-                            ProductName = row["ProductName"]?.ToString(),
-                            CategoryName = row["CategoryName"]?.ToString(),
-                            Unit = row["Unit"]?.ToString(),
-                            Price = row["Price"] != DBNull.Value ? Convert.ToDecimal(row["Price"]) : 0,
-                            Cost = row["Cost"] != DBNull.Value ? Convert.ToDecimal(row["Cost"]) : 0,
-                            Quantity = row["Quantity"] != DBNull.Value ? Convert.ToInt32(row["Quantity"]) : 0,
-                            Description = row["Description"]?.ToString(),
-                            CategoryId = row["CategoryId"] != DBNull.Value ? Convert.ToInt32(row["CategoryId"]) : (int?)null,
-                            IsActive = row["IsActive"] != DBNull.Value && Convert.ToBoolean(row["IsActive"]),
-                            CreatedAt = row["CreatedAt"] != DBNull.Value ? Convert.ToDateTime(row["CreatedAt"]) : DateTime.Now
+                            ProductId = p.ProductId,
+                            ProductCode = p.ProductCode,
+                            ProductName = p.ProductName,
+                            CategoryName = p.Category?.CategoryName,
+                            Unit = p.Unit,
+                            Price = p.Price,
+                            Cost = p.Cost ?? 0,
+                            Quantity = p.Quantity,
+                            Description = p.Description,
+                            CategoryId = p.CategoryId,
+                            IsActive = p.IsActive,
+                            CreatedAt = p.CreatedAt
                         });
                     }
                 }
@@ -233,29 +225,31 @@ namespace cs464_project.ViewModel
             }
             try
             {
-                using (var conn = DbHelper.GetConnection())
+                using (var db = DbHelper.GetContext())
                 {
-                    conn.Open();
-                    var checkCmd = new SqlCommand("SELECT COUNT(*) FROM Products WHERE ProductCode = @code", conn);
-                    checkCmd.Parameters.AddWithValue("@code", MaSP?.Trim() ?? "");
-                    int count = (int)checkCmd.ExecuteScalar();
-                    if (count > 0)
+                    string code = MaSP.Trim();
+                    if (db.Products.Any(p => p.ProductCode == code))
                     {
                         MessageBox.Show("Mã sản phẩm đã tồn tại! Vui lòng nhập mã khác.");
                         return;
                     }
-                    var cmd = new SqlCommand(
-                        @"INSERT INTO Products (ProductCode, ProductName, CategoryId, Unit, Price, Cost, Quantity, Description, IsActive, CreatedAt)
-                          VALUES (@code, @name, @cat, @unit, @price, @cost, @qty, @desc, 1, GETDATE())", conn);
-                    cmd.Parameters.AddWithValue("@code", MaSP?.Trim() ?? "");
-                    cmd.Parameters.AddWithValue("@name", TenSP?.Trim() ?? "");
-                    cmd.Parameters.AddWithValue("@cat", CategoryId ?? (object)DBNull.Value);
-                    cmd.Parameters.AddWithValue("@unit", DonVi?.Trim() ?? "");
-                    cmd.Parameters.AddWithValue("@price", decimal.Parse(GiaBan ?? "0"));
-                    cmd.Parameters.AddWithValue("@cost", decimal.Parse(GiaNhap ?? "0"));
-                    cmd.Parameters.AddWithValue("@qty", int.Parse(SoLuong ?? "0"));
-                    cmd.Parameters.AddWithValue("@desc", MoTa?.Trim() ?? "");
-                    cmd.ExecuteNonQuery();
+
+                    var product = new Model.Product
+                    {
+                        ProductCode = code,
+                        ProductName = TenSP?.Trim() ?? "",
+                        CategoryId = CategoryId ?? 0,
+                        Unit = DonVi?.Trim() ?? "",
+                        Price = decimal.Parse(GiaBan ?? "0"),
+                        Cost = decimal.Parse(GiaNhap ?? "0"),
+                        Quantity = int.Parse(SoLuong ?? "0"),
+                        Description = MoTa?.Trim() ?? "",
+                        IsActive = true,
+                        CreatedAt = DateTime.Now
+                    };
+
+                    db.Products.Add(product);
+                    db.SaveChanges();
                 }
                 MessageBox.Show("Thêm sản phẩm thành công!");
                 LoadData();
@@ -277,32 +271,30 @@ namespace cs464_project.ViewModel
             }
             try
             {
-                using (var conn = DbHelper.GetConnection())
+                using (var db = DbHelper.GetContext())
                 {
-                    conn.Open();
-                    var checkCmd = new SqlCommand("SELECT COUNT(*) FROM Products WHERE ProductCode = @code AND ProductId != @id", conn);
-                    checkCmd.Parameters.AddWithValue("@code", MaSP?.Trim() ?? "");
-                    checkCmd.Parameters.AddWithValue("@id", SelectedProduct.ProductId);
-                    int count = (int)checkCmd.ExecuteScalar();
-                    if (count > 0)
+                    string code = MaSP.Trim();
+                    int id = SelectedProduct.ProductId;
+
+                    if (db.Products.Any(p => p.ProductCode == code && p.ProductId != id))
                     {
                         MessageBox.Show("Mã sản phẩm đã tồn tại! Vui lòng nhập mã khác.");
                         return;
                     }
-                    var cmd = new SqlCommand(
-                        @"UPDATE Products SET ProductCode=@code, ProductName=@name, CategoryId=@cat, Unit=@unit, 
-                          Price=@price, Cost=@cost, Quantity=@qty, Description=@desc
-                          WHERE ProductId=@id", conn);
-                    cmd.Parameters.AddWithValue("@id", SelectedProduct.ProductId);
-                    cmd.Parameters.AddWithValue("@code", MaSP?.Trim() ?? "");
-                    cmd.Parameters.AddWithValue("@name", TenSP?.Trim() ?? "");
-                    cmd.Parameters.AddWithValue("@cat", CategoryId ?? (object)DBNull.Value);
-                    cmd.Parameters.AddWithValue("@unit", DonVi?.Trim() ?? "");
-                    cmd.Parameters.AddWithValue("@price", decimal.Parse(GiaBan ?? "0"));
-                    cmd.Parameters.AddWithValue("@cost", decimal.Parse(GiaNhap ?? "0"));
-                    cmd.Parameters.AddWithValue("@qty", int.Parse(SoLuong ?? "0"));
-                    cmd.Parameters.AddWithValue("@desc", MoTa?.Trim() ?? "");
-                    cmd.ExecuteNonQuery();
+
+                    var product = db.Products.Find(id);
+                    if (product != null)
+                    {
+                        product.ProductCode = code;
+                        product.ProductName = TenSP?.Trim() ?? "";
+                        product.CategoryId = CategoryId ?? 0;
+                        product.Unit = DonVi?.Trim() ?? "";
+                        product.Price = decimal.Parse(GiaBan ?? "0");
+                        product.Cost = decimal.Parse(GiaNhap ?? "0");
+                        product.Quantity = int.Parse(SoLuong ?? "0");
+                        product.Description = MoTa?.Trim() ?? "";
+                        db.SaveChanges();
+                    }
                 }
                 MessageBox.Show("Cập nhật thành công!");
                 LoadData();
@@ -319,12 +311,14 @@ namespace cs464_project.ViewModel
             if (MessageBox.Show("Bạn có chắc muốn xóa?", "Xác nhận", MessageBoxButton.YesNo) != MessageBoxResult.Yes) return;
             try
             {
-                using (var conn = DbHelper.GetConnection())
+                using (var db = DbHelper.GetContext())
                 {
-                    conn.Open();
-                    var cmd = new SqlCommand("DELETE FROM Products WHERE ProductId=@id", conn);
-                    cmd.Parameters.AddWithValue("@id", SelectedProduct.ProductId);
-                    cmd.ExecuteNonQuery();
+                    var product = db.Products.Find(SelectedProduct.ProductId);
+                    if (product != null)
+                    {
+                        db.Products.Remove(product);
+                        db.SaveChanges();
+                    }
                 }
                 MessageBox.Show("Xóa thành công!");
                 LoadData();

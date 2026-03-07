@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>cs464_project</RootNamespace>
     <AssemblyName>cs464_project</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -68,6 +68,12 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.5.1\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.5.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -77,7 +83,12 @@
     <Compile Include="ViewModel\BaseViewModel.cs" />
     <Compile Include="DataAccess\DbHelper.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
-<Compile Include="ViewModel\QuanLySanPhamViewModel.cs" />
+    <Compile Include="ViewModel\QuanLyHoaDonViewModel.cs" />
+    <Compile Include="ViewModel\QuanLyKhachHangViewModel.cs" />
+    <Compile Include="ViewModel\QuanLyNhanVienViewModel.cs" />
+    <Compile Include="ViewModel\QuanLySanPhamViewModel.cs" />
+    <Compile Include="ViewModel\DashboardViewModel.cs" />
+    <Compile Include="ViewModel\ThongKeDoanhThuViewModel.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="View\HeThong.xaml.cs">
@@ -155,6 +166,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View_Body\ThongKe.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="View_Body\ThongKe.xaml.cs">
+      <DependentUpon>ThongKe.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -195,17 +215,51 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="QLCH.mdf">
+    <Content Include="QLCH1.mdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="QLCH_log.ldf">
+    <Content Include="QLCH1_log.ldf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <DependentUpon>QLCH.mdf</DependentUpon>
+      <DependentUpon>QLCH1.mdf</DependentUpon>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Compile Include="Model\Category.cs" />
+    <Compile Include="Model\Customer.cs" />
+    <Compile Include="Model\Employee.cs" />
+    <Compile Include="Model\Order.cs" />
+    <Compile Include="Model\OrderItem.cs" />
+    <Compile Include="Model\Product.cs" />
+    <Compile Include="Model\QLCH.Context.cs">
+      <DependentUpon>QLCH.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\QLCH.cs">
+      <DependentUpon>QLCH.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\QLCH.Designer.cs">
+      <DependentUpon>QLCH.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Role.cs" />
+    <Compile Include="Model\StockMovement.cs" />
+    <Compile Include="Model\User.cs" />
+    <EntityDeploy Include="Model\QLCH.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>QLCH.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="Model\QLCH.edmx.diagram" />
+    <Content Include="Model\QLCH.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>QLCH.Context.cs</LastGenOutput>
+      <DependentUpon>QLCH.edmx</DependentUpon>
+    </Content>
+    <Content Include="Model\QLCH.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>QLCH.edmx</DependentUpon>
+    </Content>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

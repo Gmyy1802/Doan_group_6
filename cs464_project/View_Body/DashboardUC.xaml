@@ -3,8 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:cs464_project.ViewModel"
         mc:Ignorable="d"
         Loaded="UserControl_Loaded">
+    <UserControl.DataContext>
+        <vm:DashboardViewModel/>
+    </UserControl.DataContext>
 
     <UserControl.Resources>
         <Style x:Key="DashCard" TargetType="Border">
@@ -28,7 +32,7 @@
                 <TextBlock Text="Tổng Quát" FontSize="26" FontWeight="Bold" Foreground="#1E293B"/>
                 <TextBlock Foreground="#64748B" FontSize="13" Margin="0,4,0,0">
                     <Run Text="Xin chào, chúc bạn ngày làm việc hiệu quả! • Hôm nay: "/>
-                    <Run x:Name="txtHomNay" Text="--/--/----"/>
+                    <Run Text="{Binding HomNay, Mode=OneWay}"/>
                 </TextBlock>
             </StackPanel>
 
@@ -46,7 +50,7 @@
                         </Border>
                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
                             <TextBlock Text="DOANH THU HÔM NAY" FontSize="10" Foreground="#64748B" FontWeight="SemiBold"/>
-                            <TextBlock x:Name="txtDoanhThuHomNay" Text="0 đ" FontSize="20" FontWeight="Bold" Foreground="#0F62FE" Margin="0,4,0,0"/>
+                            <TextBlock Text="{Binding DoanhThuHomNay}" FontSize="20" FontWeight="Bold" Foreground="#0F62FE" Margin="0,4,0,0"/>
                         </StackPanel>
                     </Grid>
                 </Border>
@@ -63,7 +67,7 @@
                         </Border>
                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
                             <TextBlock Text="HÓA ĐƠN HÔM NAY" FontSize="10" Foreground="#64748B" FontWeight="SemiBold"/>
-                            <TextBlock x:Name="txtSoHoaDonHomNay" Text="0" FontSize="20" FontWeight="Bold" Foreground="#16A34A" Margin="0,4,0,0"/>
+                            <TextBlock Text="{Binding SoHoaDonHomNay}" FontSize="20" FontWeight="Bold" Foreground="#16A34A" Margin="0,4,0,0"/>
                         </StackPanel>
                     </Grid>
                 </Border>
@@ -80,7 +84,7 @@
                         </Border>
                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
                             <TextBlock Text="TỔNG SẢN PHẨM" FontSize="10" Foreground="#64748B" FontWeight="SemiBold"/>
-                            <TextBlock x:Name="txtTongSanPham" Text="0" FontSize="20" FontWeight="Bold" Foreground="#EA580C" Margin="0,4,0,0"/>
+                            <TextBlock Text="{Binding TongSanPham}" FontSize="20" FontWeight="Bold" Foreground="#EA580C" Margin="0,4,0,0"/>
                         </StackPanel>
                     </Grid>
                 </Border>
@@ -97,7 +101,7 @@
                         </Border>
                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
                             <TextBlock Text="TỔNG NHÂN VIÊN" FontSize="10" Foreground="#64748B" FontWeight="SemiBold"/>
-                            <TextBlock x:Name="txtTongNhanVien" Text="0" FontSize="20" FontWeight="Bold" Foreground="#7C3AED" Margin="0,4,0,0"/>
+                            <TextBlock Text="{Binding TongNhanVien}" FontSize="20" FontWeight="Bold" Foreground="#7C3AED" Margin="0,4,0,0"/>
                         </StackPanel>
                     </Grid>
                 </Border>
@@ -120,7 +124,7 @@
                             <TextBlock Text="🧾" FontSize="16" VerticalAlignment="Center" Margin="0,0,8,0"/>
                             <TextBlock Text="Hóa Đơn Gần Đây" FontWeight="Bold" FontSize="15" Foreground="#1E293B" VerticalAlignment="Center"/>
                         </StackPanel>
-                        <DataGrid x:Name="dgHoaDonGanDay"
+                        <DataGrid ItemsSource="{Binding RecentOrders}"
                                   AutoGenerateColumns="False"
                                   CanUserAddRows="False"
                                   IsReadOnly="True"
@@ -166,7 +170,7 @@
                                 <TextBlock Text="🔥" FontSize="15" VerticalAlignment="Center" Margin="0,0,8,0"/>
                                 <TextBlock Text="Top Bán Chạy" FontWeight="Bold" FontSize="14" Foreground="#1E293B" VerticalAlignment="Center"/>
                             </StackPanel>
-                            <ListView x:Name="lvTopBanChay" Height="160" BorderThickness="0" Background="Transparent">
+                            <ListView ItemsSource="{Binding TopProducts}" Height="160" BorderThickness="0" Background="Transparent">
                                 <ListView.View>
                                     <GridView>
                                         <GridViewColumn Header="Sản phẩm" DisplayMemberBinding="{Binding ProductName}" Width="160"/>
@@ -187,7 +191,7 @@
                                 <TextBlock Text="⚠️" FontSize="15" VerticalAlignment="Center" Margin="0,0,8,0"/>
                                 <TextBlock Text="Sắp Hết Hàng" FontWeight="Bold" FontSize="14" Foreground="#DC2626" VerticalAlignment="Center"/>
                             </StackPanel>
-                            <ListView x:Name="lvSapHetHang" Height="160" BorderThickness="0" Background="Transparent">
+                            <ListView ItemsSource="{Binding LowStockProducts}" Height="160" BorderThickness="0" Background="Transparent">
                                 <ListView.View>
                                     <GridView>
                                         <GridViewColumn Header="Sản phẩm" DisplayMemberBinding="{Binding ProductName}" Width="160"/>

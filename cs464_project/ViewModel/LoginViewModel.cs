@@ -1,5 +1,5 @@
 using System;
-using System.Data.SqlClient;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using cs464_project.DataAccess;
@@ -11,7 +11,6 @@ namespace cs464_project.ViewModel
         private string _username;
         private string _password;
         private bool _isPasswordVisible;
-        private bool _syncingText;
 
         public string Username
         {
@@ -58,57 +57,45 @@ namespace cs464_project.ViewModel
 
             try
             {
-                using (var conn = DbHelper.GetConnection())
+                using (var db = DbHelper.GetContext())
                 {
-                    conn.Open();
-                    string sql = "SELECT UserId, PasswordHash, Salt, FullName, RoleId, IsActive FROM Users WHERE Username = @username";
-                    using (var cmd = new SqlCommand(sql, conn))
+                    var user = db.Users.FirstOrDefault(u => u.Username == Username);
+
+                    if (user == null)
                     {
-                        cmd.Parameters.AddWithValue("@username", Username);
-                        using (var reader = cmd.ExecuteReader())
+                        MessageBox.Show("Tài khoản không tồn tại!",
+                                        "Đăng nhập thất bại", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+
+                    if (!user.IsActive)
+                    {
+                        MessageBox.Show("Tài khoản đã bị vô hiệu hóa!",
+                                        "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        return;
+                    }
+
+                    if (DbHelper.VerifyPassword(Password, user.PasswordHash, user.Salt))
+                    {
+                        string fullName = user.FullName ?? Username;
+                        Application.Current.Dispatcher.Invoke(() =>
                         {
-                            if (reader.Read())
+                            var home = new View.HomePage(fullName);
+                            home.Show();
+                            foreach (Window window in Application.Current.Windows)
                             {
-                                bool isActive = reader.GetBoolean(reader.GetOrdinal("IsActive"));
-                                if (!isActive)
+                                if (window is View.Login)
                                 {
-                                    MessageBox.Show("Tài khoản đã bị vô hiệu hóa!",
-                                                    "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
-                                    return;
-                                }
-
-                                byte[] storedHash = (byte[])reader["PasswordHash"];
-                                byte[] salt = (byte[])reader["Salt"];
-
-                                if (DbHelper.VerifyPassword(Password, storedHash, salt))
-                                {
-                                    string fullName = reader["FullName"]?.ToString() ?? Username;
-                                    Application.Current.Dispatcher.Invoke(() =>
-                                    {
-                                        var home = new View.HomePage(fullName);
-                                        home.Show();
-                                        foreach (Window window in Application.Current.Windows)
-                                        {
-                                            if (window is View.Login)
-                                            {
-                                                window.Close();
-                                                break;
-                                            }
-                                        }
-                                    });
-                                }
-                                else
-                                {
-                                    MessageBox.Show("Sai mật khẩu!",
-                                                    "Đăng nhập thất bại", MessageBoxButton.OK, MessageBoxImage.Error);
+                                    window.Close();
+                                    break;
                                 }
                             }
-                            else
-                            {
-                                MessageBox.Show("Tài khoản không tồn tại!",
-                                                "Đăng nhập thất bại", MessageBoxButton.OK, MessageBoxImage.Error);
-                            }
-                        }
+                        });
+                    }
+                    else
+                    {
+                        MessageBox.Show("Sai mật khẩu!",
+                                        "Đăng nhập thất bại", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
             }
