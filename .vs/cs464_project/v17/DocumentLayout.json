@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\Administrator\\Music\\Doan_group_6\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{E0D6B70C-2242-403F-B0BC-14619A6C4811}|cs464_project\\cs464_project.csproj|c:\\users\\administrator\\music\\doan_group_6\\cs464_project\\app.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{E0D6B70C-2242-403F-B0BC-14619A6C4811}|cs464_project\\cs464_project.csproj|solutionrelative:cs464_project\\app.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{E0D6B70C-2242-403F-B0BC-14619A6C4811}|cs464_project\\cs464_project.csproj|c:\\users\\administrator\\music\\doan_group_6\\cs464_project\\viewmodel\\quanlysanphamviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E0D6B70C-2242-403F-B0BC-14619A6C4811}|cs464_project\\cs464_project.csproj|solutionrelative:cs464_project\\viewmodel\\quanlysanphamviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -27,19 +31,32 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "App.config",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Music\\Doan_group_6\\cs464_project\\App.config",
+              "RelativeDocumentMoniker": "cs464_project\\App.config",
+              "ToolTip": "C:\\Users\\Administrator\\Music\\Doan_group_6\\cs464_project\\App.config",
+              "RelativeToolTip": "cs464_project\\App.config",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAACIAQAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
+              "WhenOpened": "2026-03-08T04:23:25.436Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "QuanLySanPhamViewModel.cs",
               "DocumentMoniker": "C:\\Users\\Administrator\\Music\\Doan_group_6\\cs464_project\\ViewModel\\QuanLySanPhamViewModel.cs",
               "RelativeDocumentMoniker": "cs464_project\\ViewModel\\QuanLySanPhamViewModel.cs",
               "ToolTip": "C:\\Users\\Administrator\\Music\\Doan_group_6\\cs464_project\\ViewModel\\QuanLySanPhamViewModel.cs",
               "RelativeToolTip": "cs464_project\\ViewModel\\QuanLySanPhamViewModel.cs",
-              "ViewState": "AgIAAHUAAAAAAAAAAAAgwHMAAAAvAAAAAAAAAA==",
+              "ViewState": "AgIAAIIAAAAAAAAAAAAwwBcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-06T17:43:42.036Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "DbHelper.cs",
               "DocumentMoniker": "C:\\Users\\Administrator\\Music\\Doan_group_6\\cs464_project\\DataAccess\\DbHelper.cs",
               "RelativeDocumentMoniker": "cs464_project\\DataAccess\\DbHelper.cs",
@@ -47,18 +64,20 @@
               "RelativeToolTip": "cs464_project\\DataAccess\\DbHelper.cs",
               "ViewState": "AgIAAAYAAAAAAAAAAAAAABUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-06T17:21:20.018Z"
+              "WhenOpened": "2026-03-06T17:21:20.018Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "QLCH.edmx [Diagram1]",
               "DocumentMoniker": "C:\\Users\\Administrator\\Music\\Doan_group_6\\cs464_project\\Model\\QLCH.edmx",
               "RelativeDocumentMoniker": "cs464_project\\Model\\QLCH.edmx",
               "ToolTip": "C:\\Users\\Administrator\\Music\\Doan_group_6\\cs464_project\\Model\\QLCH.edmx [Diagram1]",
               "RelativeToolTip": "cs464_project\\Model\\QLCH.edmx [Diagram1]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001116|",
-              "WhenOpened": "2026-03-06T17:13:22.858Z"
+              "WhenOpened": "2026-03-06T17:13:22.858Z",
+              "EditorCaption": " [Diagram1]"
             }
           ]
         }
